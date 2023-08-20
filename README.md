@@ -6,27 +6,33 @@
 	
 	> [root@SeLinux ~]# grep 1692533212.734:893 /var/log/audit/audit.log | audit2why
 	type=AVC msg=audit(1692533212.734:893): avc:  denied  { name_bind } for  pid=3166 comm="nginx" src=4881 scontext=system_u:system_r:httpd_t:s0 tcontext=system_u:object_r:unreserved_port_t:s0 tclass=tcp_socket permissive=0
-
  	Was caused by:
  	The boolean nis_enabled was set incorrectly. 
  	Description:
  	Allow nis to enabled
 
  	> [root@SeLinux ~]# **setsebool -P nis_enabled on**
+
+ 	Проверяем:
+
  	> [root@SeLinux ~]# systemctl status nginx
-	b nginx.service - The nginx HTTP and reverse proxy server
+	b\ nginx.service - The nginx HTTP and reverse proxy server
    	Loaded: loaded (/usr/lib/systemd/system/nginx.service; disabled; vendor preset: disabled)
    	Active: **active (running)** since Sun 2023-08-20 12:17:10 UTC; 6s ago
 
 
 2. Второй способ - добавление нужного порта в разрешённые для соответствующего типа:
 	> [root@SeLinux ~]# **semanage port -a -t http_port_t -p tcp 4881**
+	
 	> [root@SeLinux ~]# semanage port -l | grep http
 	http_cache_port_t              tcp      8080, 8118, 8123, 10001-10010
 	http_cache_port_t              udp      3130
 	**http_port_t**                    **tcp      4881**, 80, 81, 443, 488, 8008, 8009, 8443, 9000
 	pegasus_http_port_t            tcp      5988
 	pegasus_https_port_t           tcp      5989
+
+	Проеряем:
+	
 	> [root@SeLinux ~]# systemctl status nginx
 	b nginx.service - The nginx HTTP and reverse proxy server
    	Loaded: loaded (/usr/lib/systemd/system/nginx.service; disabled; vendor preset: disabled)
