@@ -32,11 +32,11 @@
 	pegasus_https_port_t           tcp      5989
 
 	Проеряем:
-	
-	> [root@SeLinux ~]# systemctl status nginx
+
+	`[root@SeLinux ~]# systemctl status nginx
 	b nginx.service - The nginx HTTP and reverse proxy server
    	Loaded: loaded (/usr/lib/systemd/system/nginx.service; disabled; vendor preset: disabled)
-   	Active: **active (running)** since Sun 2023-08-20 12:43:27 UTC; 6s ago
+   	Active: **active (running)** since Sun 2023-08-20 12:43:27 UTC; 6s ago`
 
 3. Третий способ - формирование и установка модуля для Selinux:
 	
