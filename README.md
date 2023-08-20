@@ -108,11 +108,11 @@ rw-rw----. root named system_u:object_r:named_zone_t:s0 named.newdns.lab<br/>
 Пробуем внести изменения в зону на клиенте ещё раз:<br/><br/>
 *[root@client ~]# nsupdate -k /etc/named.zonetransfer.key*
 
-server 192.168.50.10
-	zone ddns.lab
-	update add www.ddns.lab. 60 A 192.168.50.15
-	send
-	quit
+server 192.168.50.10<br/>
+	zone ddns.lab<br/>
+	update add www.ddns.lab. 60 A 192.168.50.15<br/>
+	send<br/>
+	quit<br/>
 
 Изменения внеслись успешно.
 
