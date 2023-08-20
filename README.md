@@ -1,6 +1,6 @@
-### OTUS-Linux-2023-04-L17 | Selinux
+## OTUS-Linux-2023-04-L17 | Selinux
 
-####Запуск nginx на нестандартном порту разными способами
+###Запуск nginx на нестандартном порту разными способами
 
 1. Первый способ запустить nginx на нестандартном порту - разрежить параметр nis_enabled:
 	
@@ -59,7 +59,7 @@
    	Loaded: loaded (/usr/lib/systemd/system/nginx.service; disabled; vendor preset: disabled)
    	**Active: active (running)** since Sun 2023-08-20 13:07:17 UTC; 1s ago
 
-####Обеспечение работоспособности приложения при включенном SELinux
+###Обеспечение работоспособности приложения при включенном SELinux
 
 Стэнд из двух хостов: client и ns01 (сервер)
 
