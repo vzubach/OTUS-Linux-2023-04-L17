@@ -6,7 +6,7 @@
 	
 	> [root@SeLinux ~]# grep 1692533212.734:893 /var/log/audit/audit.log | audit2why
 	type=AVC msg=audit(1692533212.734:893): avc:  denied  { name_bind } for  pid=3166 comm="nginx" src=4881 scontext=system_u:system_r:httpd_t:s0 tcontext=system_u:object_r:unreserved_port_t:s0 tclass=tcp_socket permissive=0
- 	Was caused by:
+	Was caused by:
  	The boolean nis_enabled was set incorrectly. 
  	Description:
  	Allow nis to enabled
@@ -16,7 +16,7 @@
  	Проверяем:
 
  	> [root@SeLinux ~]# systemctl status nginx
-	b\ nginx.service - The nginx HTTP and reverse proxy server
+	b''' nginx.service - The nginx HTTP and reverse proxy server
    	Loaded: loaded (/usr/lib/systemd/system/nginx.service; disabled; vendor preset: disabled)
    	Active: **active (running)** since Sun 2023-08-20 12:17:10 UTC; 6s ago
 
