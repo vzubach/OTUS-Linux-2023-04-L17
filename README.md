@@ -6,11 +6,11 @@
 	
 	*[root@SeLinux ~]# grep 1692533212.734:893 /var/log/audit/audit.log | audit2why*
 
-	type=AVC msg=audit(1692533212.734:893): avc:  denied  { name_bind } for  pid=3166 comm="nginx" src=4881 scontext=system_u:system_r:httpd_t:s0 tcontext=system_u:object_r:unreserved_port_t:s0 tclass=tcp_socket permissive=0
-	Was caused by:
- 	The boolean nis_enabled was set incorrectly. 
- 	Description:
- 	Allow nis to enabled
+	type=AVC msg=audit(1692533212.734:893): avc:  denied  { name_bind } for  pid=3166 comm="nginx" src=4881 scontext=system_u:system_r:httpd_t:s0 tcontext=system_u:object_r:unreserved_port_t:s0 tclass=tcp_socket permissive=0<br/>
+	Was caused by:<br/>
+ 	The boolean nis_enabled was set incorrectly.<br/>
+ 	Description:<br/>
+ 	Allow nis to enabled<br/>
 
  	*[root@SeLinux ~]# **setsebool -P nis_enabled on***
 
