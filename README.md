@@ -12,6 +12,8 @@
  	Description:<br/>
  	Allow nis to enabled<br/>
 
+ 	Разрешаем параметр nis_enabled<br/>
+
  	*[root@SeLinux ~]# **setsebool -P nis_enabled on***
 
  	Проверяем:
@@ -47,12 +49,12 @@
 	
 	*[root@SeLinux ~]# grep nginx /var/log/audit/audit.log | audit2allow -M nginx*
 
-	******************** IMPORTANT ***********************
+	******************** IMPORTANT ***********************<br/>
 	To make this policy package active, execute:
 
-	semodule -i nginx.pp
+	semodule -i nginx.pp<br/>	
 	
-	*[root@SeLinux ~]# **semodule -i nginx.pp***
+	*[root@SeLinux ~]# **semodule -i nginx.pp***<br/>
 	*[root@SeLinux ~]# systemctl status nginx*
 	
 	b nginx.service - The nginx HTTP and reverse proxy server<br/>
@@ -64,7 +66,7 @@
 Стэнд из двух хостов: client и ns01 (сервер)
 
 При попытке внести изменения в зону наблюдается проблема на серверной части стэнда, ошибка в контексте безопасности. <br/>
-Вместо типа named_t используется тип etc_t:<br/>
+Вместо типа named_t используется тип etc_t:<br/><br/>
 	*[root@ns01 ~]# cat /var/log/audit/audit.log | audit2why*<br/>
 type=AVC msg=audit(1692541771.016:1924): avc:  denied  { create } for  pid=5144 comm="isc-worker0000" name="named.ddns.lab.view1.jnl" scontext=system_u:system_r:named_t:s0 tcontext=system_u:object_r:etc_t:s0 tclass=file permissive=0<br/>
 	Was caused by:<br/>
@@ -73,37 +75,37 @@ type=AVC msg=audit(1692541771.016:1924): avc:  denied  { create } for  pid=5144 
 
 *[root@ns01 ~]# ls -laZ /etc/named*<br/>
 
-drw-rwx---. root named system_u:object_r:**etc_t**:s0       .
-drwxr-xr-x. root root  system_u:object_r:**etc_t**:s0       ..
-drw-rwx---. root named unconfined_u:object_r:**etc_t**:s0   dynamic
--rw-rw----. root named system_u:object_r:**etc_t**:s0       named.50.168.192.rev
--rw-rw----. root named system_u:object_r:**etc_t**:s0       named.dns.lab
--rw-rw----. root named system_u:object_r:**etc_t**:s0       named.dns.lab.view1
--rw-rw----. root named system_u:object_r:**etc_t**:s0       named.newdns.lab
-
-Контекст безопасности неправильный, конфигурационные файлы лежат в другом каталоге.	
+drw-rwx---. root named system_u:object_r:**etc_t**:s0       .<br/>
+drwxr-xr-x. root root  system_u:object_r:**etc_t**:s0       ..<br/>
+drw-rwx---. root named unconfined_u:object_r:**etc_t**:s0   dynamic<br/>
+-rw-rw----. root named system_u:object_r:**etc_t**:s0       named.50.168.192.rev<br/>
+-rw-rw----. root named system_u:object_r:**etc_t**:s0       named.dns.lab<br/>
+-rw-rw----. root named system_u:object_r:**etc_t**:s0       named.dns.lab.view1<br/>
+-rw-rw----. root named system_u:object_r:**etc_t**:s0       named.newdns.lab<br/>
+<br/>
+Контекст безопасности неправильный, конфигурационные файлы лежат в другом каталоге.	<br/>
 
 Смотрим где должны лежать конфигурационные файлы:
 
 *[root@ns01 ~]# semanage fcontext -l | grep named*
 
-/etc/rndc.*                                        regular file       system_u:object_r:named_conf_t:s0 
-**/var/named**(/.*)?                                   all files          system_u:object_r:**named_zone_t**:s0
+/etc/rndc.*                                        regular file       system_u:object_r:named_conf_t:s0 <br/>
+**/var/named**(/.*)?                                   all files          system_u:object_r:**named_zone_t**:s0<br/>
 <br/>
 Изменяем тип контекста безопасности каталога и проверяем:
 <br/>
 *[root@ns01 ~]# chcon -R -t named_zone_t /etc/named*<br/>
 *[root@ns01 ~]# ls -laZ /etc/named*
 <br/>
-drw-rwx---. root named system_u:object_r:named_zone_t:s0 .
-drwxr-xr-x. root root  system_u:object_r:etc_t:s0       ..
-drw-rwx---. root named unconfined_u:object_r:named_zone_t:s0 dynamic
--rw-rw----. root named system_u:object_r:named_zone_t:s0 named.50.168.192.rev
--rw-rw----. root named system_u:object_r:named_zone_t:s0 named.dns.lab
--rw-rw----. root named system_u:object_r:named_zone_t:s0 named.dns.lab.view1
-rw-rw----. root named system_u:object_r:named_zone_t:s0 named.newdns.lab
-
-Пробуем внести изменения в зону на клиенте ещё раз:
+drw-rwx---. root named system_u:object_r:named_zone_t:s0 .<br/>
+drwxr-xr-x. root root  system_u:object_r:etc_t:s0       ..<br/>
+drw-rwx---. root named unconfined_u:object_r:named_zone_t:s0 dynamic<br/>
+-rw-rw----. root named system_u:object_r:named_zone_t:s0 named.50.168.192.rev<br/>
+-rw-rw----. root named system_u:object_r:named_zone_t:s0 named.dns.lab<br/>
+-rw-rw----. root named system_u:object_r:named_zone_t:s0 named.dns.lab.view1<br/>
+rw-rw----. root named system_u:object_r:named_zone_t:s0 named.newdns.lab<br/>
+<br/>
+Пробуем внести изменения в зону на клиенте ещё раз:<br/><br/>
 *[root@client ~]# nsupdate -k /etc/named.zonetransfer.key*
 
 server 192.168.50.10
